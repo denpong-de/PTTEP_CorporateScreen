@@ -892,7 +892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f240b70d6a7d57a4d970ee819d98c713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IdleTimeSetting: 5
+  config: {fileID: 11400000, guid: ebf470ed2df5eef4392bb13cc2ba7fc7, type: 2}
   ScreenSaverCanvas: {fileID: 1057050446}
 --- !u!1 &2060377717
 GameObject:
