@@ -4,6 +4,7 @@ using DG.Tweening;
 
 public class UIAnim : MonoBehaviour
 {
+    //Main Canvas
     [SerializeField] Image mainBg;
     [SerializeField] Image[] mainMenuBg;
     [SerializeField] Image[] mainMenuText;
@@ -12,6 +13,7 @@ public class UIAnim : MonoBehaviour
 
     public void mainCanvasTween(float duration)
     {
+        //Right background Animation when finished do Font overlay loop tween.
         Sequence bgSequence = DOTween.Sequence();
         bgSequence.Append(mainBg.transform.DOScale(new Vector2(0.5f, 0.5f), 0f))
             .Join(mainBg.transform.DOScale(new Vector2(1f, 1f), duration).SetEase(Ease.InOutCubic))
@@ -19,22 +21,22 @@ public class UIAnim : MonoBehaviour
             .Join(mainBg.DOFade(1f, duration).SetEase(Ease.InOutCubic))
             .OnComplete(FontOverlayTween);
 
-        foreach(var bg in mainMenuBg)
-        {
-            bg.rectTransform.DOAnchorPos(new Vector2(940, 0), 0f);
-            bg.rectTransform.DOAnchorPos(new Vector2(0, 0), duration).SetEase(Ease.InOutCubic);
-            bg.DOFade(0f,0f);
-            bg.DOFade(1f, duration).SetEase(Ease.InOutCubic);
-        }
+        //Left menu background Animation
+        MenuTween(mainMenuBg, duration);
+        //Left menu text Animation
+        MenuTween(mainMenuText, duration);
+    }
 
-        foreach(var text in mainMenuText)
+    void MenuTween(Image[] images, float duration)
+    {
+        foreach (var image in images)
         {
-            Vector2 startPos = text.rectTransform.anchoredPosition;
+            Vector2 startPos = image.rectTransform.anchoredPosition;
 
-            text.rectTransform.DOAnchorPos(new Vector2(940, startPos.y), 0f);
-            text.rectTransform.DOAnchorPos(startPos, duration).SetEase(Ease.InOutCubic);
-            text.DOFade(0f, 0f);
-            text.DOFade(1f, duration).SetEase(Ease.InOutCubic);
+            image.rectTransform.DOAnchorPos(new Vector2(940, startPos.y), 0f);
+            image.rectTransform.DOAnchorPos(startPos, duration).SetEase(Ease.InOutCubic);
+            image.DOFade(0f, 0f);
+            image.DOFade(1f, duration).SetEase(Ease.InOutCubic);
         }
     }
 
@@ -51,6 +53,7 @@ public class UIAnim : MonoBehaviour
         }
     }
 
+    //Reset & kill loop when not using
     public void KillLoopSequence()
     {
         loopSequence.Goto(0f);
