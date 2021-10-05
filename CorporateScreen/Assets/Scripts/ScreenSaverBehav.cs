@@ -5,6 +5,7 @@ using UnityEngine;
  * and this code will run */
 public class ScreenSaverBehav : MonoBehaviour
 {
+    //ScriptAbleObject
     [SerializeField] ConfigScriptableObject config;
 
     [SerializeField] GameObject ScreenSaverCanvas;
@@ -12,7 +13,16 @@ public class ScreenSaverBehav : MonoBehaviour
 
     void OnEnable()
     {
+        //Call onStopScreenSaver event
+        GameEvents.current.StopScreenSaver();
+
         LastIdleTime = Time.time;
+    }
+
+    void OnDisable()
+    {
+        //Call onStartScreenSaver event
+        GameEvents.current.StartScreenSaver();
     }
 
     void Update()

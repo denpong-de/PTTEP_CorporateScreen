@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49298f3c5344bbd459d43da6e362640d, type: 3}
   m_Name: Config
   m_EditorClassIdentifier: 
-  ScreenSaverWaitTime: 5
+  ScreenSaverWaitTime: 10
