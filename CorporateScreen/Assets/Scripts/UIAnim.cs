@@ -48,9 +48,10 @@ public class UIAnim : MonoBehaviour
         {
             float startPos = overlay.anchoredPosition.x;
 
-            loopSequence.Insert(0f, overlay.DOAnchorPos(new Vector2(startPos + 900f, 0f), 3f))
-                .SetLoops(-1, LoopType.Restart);
+            loopSequence.Insert(0f, overlay.DOAnchorPos(new Vector2(startPos + 900f, 0f), 3f));
         }
+
+        loopSequence.SetLoops(-1, LoopType.Restart);
     }
 
     //Reset & kill loop when not using

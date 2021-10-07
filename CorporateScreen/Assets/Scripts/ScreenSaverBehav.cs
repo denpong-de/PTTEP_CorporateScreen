@@ -16,6 +16,7 @@ public class ScreenSaverBehav : MonoBehaviour
         //Call onStopScreenSaver event
         GameEvents.current.StopScreenSaver();
 
+        //Reset Last idle time
         LastIdleTime = Time.time;
     }
 
@@ -36,7 +37,9 @@ public class ScreenSaverBehav : MonoBehaviour
         Debug.Log(Time.time - LastIdleTime + ":" + config.ScreenSaverWaitTime);
         #endif
 
-        if(Time.time - LastIdleTime > config.ScreenSaverWaitTime)
+        //Enable ScreenSaver Canvas & disable this gameObject(ScreenSaver Manager)
+        //You can config ScreenSaver wait time in Assets>Config
+        if (Time.time - LastIdleTime > config.ScreenSaverWaitTime)
         {
             ScreenSaverCanvas.SetActive(true);
             this.gameObject.SetActive(false);
