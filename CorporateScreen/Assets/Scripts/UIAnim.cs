@@ -4,14 +4,24 @@ using DG.Tweening;
 
 public class UIAnim : MonoBehaviour
 {
-    //Main Canvas
+    Sequence loopSequence;
+
+    [Header("Main Canvas")]
     [SerializeField] Image mainBg;
     [SerializeField] Image[] mainMenuBg;
     [SerializeField] Image[] mainMenuText;
     [SerializeField] RectTransform[] overlays;
-    Sequence loopSequence;
 
-    public void mainCanvasTween(float duration)
+    [Header("About Canvas")]
+    [SerializeField] Image aboutBg;
+    Image aboutBgWhite;
+
+    void Awake()
+    {
+        aboutBgWhite = aboutBg.gameObject.transform.GetChild(0).gameObject.GetComponent<Image>();
+    }
+
+    public void MainCanvasTween(float duration)
     {
         //Right background Animation when finished do Font overlay loop tween.
         Sequence bgSequence = DOTween.Sequence();
@@ -25,6 +35,18 @@ public class UIAnim : MonoBehaviour
         MenuTween(mainMenuBg, duration);
         //Left menu text Animation
         MenuTween(mainMenuText, duration);
+    }
+
+    public void AboutCanvasTween(float duration)
+    {
+        Vector2 stopPos = aboutBg.rectTransform.anchoredPosition;
+
+        Sequence bgSequence = DOTween.Sequence();
+        bgSequence.Append(aboutBg.transform.DOScale(new Vector3(0.4768439f, 0.3714008f, 0.3714008f), 0f))
+            .Join(aboutBg.transform.DOScale(new Vector3(1f, 1f, 1f), duration).SetEase(Ease.InOutCubic))
+            .Join(aboutBg.rectTransform.DOAnchorPos(new Vector2(519f, 678f), 0f))
+            .Join(aboutBg.rectTransform.DOAnchorPos(stopPos, duration).SetEase(Ease.OutExpo))
+            .Join(aboutBgWhite.DOFade(0f, duration).SetEase(Ease.InOutCubic));
     }
 
     void MenuTween(Image[] images, float duration)
