@@ -9,6 +9,8 @@ public class UIBehav : MonoBehaviour
     [SerializeField]GameObject canvas;
     GameObject mainCanvas, aboutCanvas, homeButton;
 
+    int currentCanvas = 1;
+
     void Start()
     {
         uiAnim = GetComponent<UIAnim>();
@@ -36,12 +38,15 @@ public class UIBehav : MonoBehaviour
                 StartCoroutine(ChangeSceneDelay(mainCanvas,aboutCanvas,2.5f));
                 homeButton.SetActive(false);
                 uiAnim.MainCanvasTween(2.5f);
+                currentCanvas = 1;
                 break;
             case 2:
+                mainCanvas.SetActive(true); //For wake up form screen saver
                 mainCanvas.transform.SetAsFirstSibling();
                 StartCoroutine(ChangeSceneDelay(aboutCanvas, mainCanvas, 2.5f));
                 homeButton.SetActive(true);
-                uiAnim.AboutCanvasTween(1f);
+                uiAnim.AboutCanvasTween(2.5f);
+                currentCanvas = 2;
                 break;
         }
     }
@@ -55,7 +60,7 @@ public class UIBehav : MonoBehaviour
 
     void StartAnim()
     {
-        uiAnim.MainCanvasTween(2.5f);
+        ChangeScene(currentCanvas);
     }
 
     void StopAnim()

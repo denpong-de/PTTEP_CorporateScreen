@@ -39,7 +39,11 @@ public class ScreenSaverBehav : MonoBehaviour
 
         //Enable ScreenSaver Canvas & disable this gameObject(ScreenSaver Manager)
         //You can config ScreenSaver wait time in Assets>Config
-        if (Time.time - LastIdleTime > config.ScreenSaverWaitTime)
+        if (Input.GetButton("Fire1"))
+        {
+            LastIdleTime = Time.time;
+        }
+        else if (Time.time - LastIdleTime > config.ScreenSaverWaitTime)
         {
             ScreenSaverCanvas.SetActive(true);
             this.gameObject.SetActive(false);
