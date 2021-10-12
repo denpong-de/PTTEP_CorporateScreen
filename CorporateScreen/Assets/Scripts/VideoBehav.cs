@@ -28,7 +28,7 @@ public class VideoBehav : MonoBehaviour
         }
 
         //Debug
-        PlayVideo(0);
+        //PlayVideo(0);
     }
 
     //Play loop clip when video end
@@ -106,7 +106,29 @@ public class VideoBehav : MonoBehaviour
         else
         {
             videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
-                .OnComplete(SwitchPanel);
+                .OnComplete(SwitchPanelDown);
+        }
+
+        NextVideoPlay();
+    }
+
+    //When Pressed up button in program
+    public void PreviousVideo()
+    {
+        curClip--;
+
+        videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y - 2161.01f;
+
+        if (curClip == 0)
+        {
+            videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f);
+            int previousPlayer = curClip + 1;
+            StartCoroutine(ClosePreviousVideo(previousPlayer, 2.5f));
+        }
+        else
+        {
+            videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
+                .OnComplete(SwitchPanelUp);
         }
 
         NextVideoPlay();
@@ -115,19 +137,6 @@ public class VideoBehav : MonoBehaviour
     //VideoPlayer Behav
     void NextVideoPlay()
     {
-        //if (curClip % 3 == 1)
-        //{
-        //    ChangeVideo(videoPlayers[1], videoClips[curClip], false);
-        //}
-        //if (curClip % 3 == 2)
-        //{
-        //    ChangeVideo(videoPlayers[2], videoClips[curClip], false);
-        //}
-        //if (curClip % 3 == 0)
-        //{
-        //    ChangeVideo(videoPlayers[0], videoClips[curClip], false);
-        //}
-
         int curPlayer = curClip % 3;
         ChangeVideo(videoPlayers[curPlayer], videoClips[curClip], false);
     }
@@ -140,7 +149,7 @@ public class VideoBehav : MonoBehaviour
     }
 
     //Make the first panel goto last 
-    void SwitchPanel()
+    void SwitchPanelDown()
     {
         int panelThatSwitch;
         int previousPlayer;
@@ -166,7 +175,37 @@ public class VideoBehav : MonoBehaviour
         float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y - 6483.03f;
         videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(1920, stopPanelPosY), 0);
          
-        StartCoroutine(ClosePreviousVideo(previousPlayer, 2.5f));
+        StartCoroutine(ClosePreviousVideo(previousPlayer, 0));
+    }
+
+    //Make the last panel goto first 
+    void SwitchPanelUp()
+    {
+        int panelThatSwitch;
+        int previousPlayer;
+
+        panelSwitchCount--;
+
+        switch (panelSwitchCount % 3)
+        {
+            case 1:
+                panelThatSwitch = 1;
+                previousPlayer = 0;
+                break;
+            case 2:
+                panelThatSwitch = 2;
+                previousPlayer = 1;
+                break;
+            default:
+                panelThatSwitch = 0;
+                previousPlayer = 2;
+                break;
+        }
+
+        float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y + 6483.03f;
+        videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(1920, stopPanelPosY), 0);
+
+        StartCoroutine(ClosePreviousVideo(previousPlayer, 0));
     }
 
     //Close previous player when tween is finished 
