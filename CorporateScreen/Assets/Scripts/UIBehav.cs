@@ -7,7 +7,7 @@ public class UIBehav : MonoBehaviour
     UIAnim uiAnim;
 
     [SerializeField]GameObject canvas;
-    GameObject mainCanvas, aboutCanvas, homeButton;
+    GameObject mainCanvas, aboutCanvas, videoCanvas, homeButton;
 
     int currentCanvas = 1;
 
@@ -19,12 +19,11 @@ public class UIBehav : MonoBehaviour
         GameEvents.current.onStopScreenSaver += StartAnim;
         GameEvents.current.onStartScreenSaver += StopAnim;
 
-        //Setup Canvas
+        //Setup valueble
         mainCanvas = canvas.transform.GetChild(0).gameObject;
         aboutCanvas = canvas.transform.GetChild(1).gameObject;
-        homeButton = canvas.transform.GetChild(2).gameObject;
-
-        //uiAnim.AboutCanvasTween(2.5f);
+        videoCanvas = canvas.transform.GetChild(2).gameObject;
+        homeButton = canvas.transform.GetChild(3).gameObject;
     }
 
     public void ChangeScene(int canvasIndex)
@@ -34,19 +33,23 @@ public class UIBehav : MonoBehaviour
         switch (canvasIndex)
         {
             case 1:
-                aboutCanvas.transform.SetAsFirstSibling();
+                mainCanvas.transform.SetAsLastSibling();
                 StartCoroutine(ChangeSceneDelay(mainCanvas,aboutCanvas,2.5f));
-                homeButton.SetActive(false);
                 uiAnim.MainCanvasTween(2.5f);
                 currentCanvas = 1;
                 break;
             case 2:
                 mainCanvas.SetActive(true); //For wake up form screen saver
-                mainCanvas.transform.SetAsFirstSibling();
+                aboutCanvas.transform.SetAsLastSibling();
                 StartCoroutine(ChangeSceneDelay(aboutCanvas, mainCanvas, 2.5f));
-                homeButton.SetActive(true);
                 uiAnim.AboutCanvasTween(2.5f);
                 currentCanvas = 2;
+                break;
+            case 3:
+                mainCanvas.transform.SetAsLastSibling();
+                StartCoroutine(ChangeSceneDelay(mainCanvas,videoCanvas,2.5f));
+                uiAnim.MainCanvasTween(2.5f);
+                currentCanvas = 1;
                 break;
         }
     }
