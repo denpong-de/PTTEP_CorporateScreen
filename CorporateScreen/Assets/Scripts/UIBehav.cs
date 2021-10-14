@@ -6,10 +6,12 @@ public class UIBehav : MonoBehaviour
 {
     UIAnim uiAnim;
 
-    [SerializeField]GameObject canvas;
-    GameObject mainCanvas, aboutCanvas, videoCanvas, homeButton;
+    [SerializeField]GameObject masterCanvas;
+    GameObject mainCanvas, aboutCanvas, videoCanvas, businessCanvas, sustainCanvas, videoDCanvas;
+    List<GameObject> canvases = new List<GameObject>();
 
     int currentCanvas = 1;
+    int closeCanvasIndex;
 
     void Start()
     {
@@ -20,10 +22,18 @@ public class UIBehav : MonoBehaviour
         GameEvents.current.onStartScreenSaver += StopAnim;
 
         //Setup valueble
-        mainCanvas = canvas.transform.GetChild(0).gameObject;
-        aboutCanvas = canvas.transform.GetChild(1).gameObject;
-        videoCanvas = canvas.transform.GetChild(2).gameObject;
-        homeButton = canvas.transform.GetChild(3).gameObject;
+        mainCanvas = masterCanvas.transform.GetChild(0).gameObject;
+        aboutCanvas = masterCanvas.transform.GetChild(1).gameObject;
+        videoCanvas = masterCanvas.transform.GetChild(2).gameObject;
+        businessCanvas = masterCanvas.transform.GetChild(3).gameObject;
+        sustainCanvas = masterCanvas.transform.GetChild(4).gameObject;
+        videoDCanvas = masterCanvas.transform.GetChild(5).gameObject;
+
+        canvases.Add(mainCanvas);
+        canvases.Add(aboutCanvas);
+        canvases.Add(videoCanvas);
+        canvases.Add(businessCanvas);
+        canvases.Add(sustainCanvas);
     }
 
     public void ChangeScene(int canvasIndex)
@@ -33,25 +43,36 @@ public class UIBehav : MonoBehaviour
         switch (canvasIndex)
         {
             case 1:
-                mainCanvas.transform.SetAsLastSibling();
-                StartCoroutine(ChangeSceneDelay(mainCanvas,aboutCanvas,2.5f));
-                uiAnim.MainCanvasTween(2.5f);
+                mainCanvas.SetActive(true); //For wake up form screen saver
+                uiAnim.AboutCanvasTween(2.5f);
                 currentCanvas = 1;
+                closeCanvasIndex = 0;
                 break;
             case 2:
-                mainCanvas.SetActive(true); //For wake up form screen saver
-                aboutCanvas.transform.SetAsLastSibling();
-                StartCoroutine(ChangeSceneDelay(aboutCanvas, mainCanvas, 2.5f));
-                uiAnim.AboutCanvasTween(2.5f);
-                currentCanvas = 2;
+                currentCanvas = 3;
+                closeCanvasIndex = 2;
                 break;
             case 3:
-                mainCanvas.transform.SetAsLastSibling();
-                StartCoroutine(ChangeSceneDelay(mainCanvas,videoCanvas,2.5f));
-                uiAnim.MainCanvasTween(2.5f);
-                currentCanvas = 1;
+                currentCanvas = 3;
+                closeCanvasIndex = 0;
+                break;
+            case 4:
+                currentCanvas = 4;
+                closeCanvasIndex = 0;
                 break;
         }
+
+        canvases[currentCanvas].transform.SetAsLastSibling();
+        StartCoroutine(ChangeSceneDelay(canvases[currentCanvas], canvases[closeCanvasIndex], 2.5f));
+    }
+
+    public void ReturnToMain()
+    {
+        mainCanvas.transform.SetAsLastSibling();
+        StartCoroutine(ChangeSceneDelay(mainCanvas, canvases[currentCanvas], 2.5f));
+        if(currentCanvas >= 2)
+            StartCoroutine(ChangeSceneDelay(mainCanvas, videoDCanvas, 2.5f));
+        uiAnim.MainCanvasTween(2.5f);
     }
 
     IEnumerator ChangeSceneDelay(GameObject newCanvas, GameObject oldCanvas,float duration)

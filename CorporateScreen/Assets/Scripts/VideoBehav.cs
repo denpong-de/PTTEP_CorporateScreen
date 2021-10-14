@@ -7,6 +7,8 @@ using DG.Tweening;
 
 public class VideoBehav : MonoBehaviour
 {
+    [SerializeField] UIBehav uiBehav;
+
     [SerializeField] GameObject videoCanvas;
     [SerializeField] RectTransform videoRowCanvas;
     [SerializeField] RectTransform[] videoPanels;
@@ -49,9 +51,11 @@ public class VideoBehav : MonoBehaviour
         if (videoClipLoops[curClip] == null) return;
 
         //Play current clip but loop version
-        videoPlayer.clip = videoClipLoops[curClip];
-        videoPlayer.isLooping = true;
-        videoPlayer.Play();
+        //videoPlayer.clip = videoClipLoops[curClip];
+        //videoPlayer.isLooping = true;
+        //videoPlayer.Play();
+
+        ChangeVideo(videoPlayer,videoClipLoops[curClip],true);
     }
 
     void SaveStartPos()
@@ -92,6 +96,13 @@ public class VideoBehav : MonoBehaviour
     //When Pressed down button in program
     public void NextVideo()
     {
+        //if it is the last video change to OurBusiness canvas
+        if(curClip == videoClips.Length -1)
+        {
+            uiBehav.ChangeScene(2);
+            return;
+        }
+
         curClip++;
 
         if(curClip != 4)
@@ -146,7 +157,7 @@ public class VideoBehav : MonoBehaviour
     {
         if (curClip == videoClips.Length - 1)
         {
-            nextButton.enabled = false;
+            //nextButton.enabled = false;
         }
         else if (curClip == 0)
         {
@@ -167,7 +178,7 @@ public class VideoBehav : MonoBehaviour
         ChangeVideo(videoPlayers[curPlayer % 3], videoClips[curClip], false);
     }
 
-    void ChangeVideo(VideoPlayer videoPlayer, VideoClip clip, bool isLooping)
+    public void ChangeVideo(VideoPlayer videoPlayer, VideoClip clip, bool isLooping)
     {
         videoPlayer.clip = clip;
         videoPlayer.isLooping = isLooping;
@@ -269,6 +280,7 @@ public class VideoBehav : MonoBehaviour
             ClearOutRenderTexture(renderTexture);
         }
 
+        isSkipFrame = false;
         ResetCanvasPos();
     }
 
