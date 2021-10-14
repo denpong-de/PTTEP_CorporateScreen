@@ -46,6 +46,7 @@ public class ScreenSaverBehav : MonoBehaviour
         else if (Time.time - LastIdleTime > config.ScreenSaverWaitTime)
         {
             ScreenSaverCanvas.SetActive(true);
+            ScreenSaverCanvas.transform.SetAsLastSibling();
             this.gameObject.SetActive(false);
         }
     }
