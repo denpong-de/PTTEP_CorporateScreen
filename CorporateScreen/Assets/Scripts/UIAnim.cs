@@ -6,6 +6,7 @@ public class UIAnim : MonoBehaviour
 {
     Sequence loopSequence;
     bool isMain;
+    bool isOur;
 
     [Header("Main Canvas")]
     [SerializeField] Image mainBg;
@@ -22,6 +23,19 @@ public class UIAnim : MonoBehaviour
     [SerializeField] Image[] aboutMenuText;
     [SerializeField] RectTransform[] aboutOverlays;
     Image aboutBgWhite;
+
+    [Header("OurBusiness Canvas")]
+    [SerializeField] Image ourBg;
+    [SerializeField] Image[] ourTexts;
+    [SerializeField] Image ourTransition;
+    [SerializeField] Image[] ourOverlays;
+
+    [Header("OurSustain Canvas")]
+    [SerializeField] Image susBgL;
+    [SerializeField] Image susBgR;
+    [SerializeField] Image[] susTexts;
+    [SerializeField] Image susTransition;
+    [SerializeField] Image[] susOverlays;
 
     void Awake()
     {
@@ -84,10 +98,66 @@ public class UIAnim : MonoBehaviour
         MenuTween(aboutMenuText, duration);
     }
 
+    public void OurBusinessTween(float duration)
+    {
+        isOur = true;
+
+        Vector2 stopBgPos = ourBg.rectTransform.anchoredPosition;
+
+        Sequence bgSequence = DOTween.Sequence();
+        bgSequence.Append(ourBg.rectTransform.DOAnchorPos(new Vector2(0, -1833f), 0))
+            .Join(ourBg.rectTransform.DOAnchorPos(stopBgPos, duration).SetEase(Ease.InOutCubic))
+            .Join(ourBg.DOFade(0f, 0f))
+            .Join(ourBg.DOFade(1f, duration).SetEase(Ease.InOutCubic))
+            .OnComplete(FontOverlayTweenTwo);
+
+        //White BG prevent form see through canvas
+        TransitionTween(ourTransition, duration);
+
+        TwoMenuTextTween(ourTexts,2.5f);
+    }
+
+    public void SusTween(float duration)
+    {
+        isOur = false;
+
+        Vector2 stopBgPosL = susBgL.rectTransform.anchoredPosition;
+        Vector2 stopBgPosR = susBgR.rectTransform.anchoredPosition;
+
+        Sequence bgSequence = DOTween.Sequence();
+        bgSequence.Append(susBgL.rectTransform.DOAnchorPos(new Vector2(stopBgPosL.x, -1833f), 0))
+            .Join(susBgL.rectTransform.DOAnchorPos(stopBgPosL, duration).SetEase(Ease.InOutCubic))
+            .Join(susBgR.rectTransform.DOAnchorPos(new Vector2(stopBgPosR.x, -1833f), 0))
+            .Join(susBgR.rectTransform.DOAnchorPos(stopBgPosR, duration).SetEase(Ease.InOutCubic))
+            .Join(susBgL.DOFade(0f, 0f))
+            .Join(susBgL.DOFade(1f, duration).SetEase(Ease.InOutCubic))
+            .Join(susBgR.DOFade(0f, 0f))
+            .Join(susBgR.DOFade(1f, duration).SetEase(Ease.InOutCubic))
+            .OnComplete(FontOverlayTweenTwo);
+
+        //White BG prevent form see through canvas
+        TransitionTween(susTransition, duration);
+
+        TwoMenuTextTween(susTexts, 2.5f);
+    }
+
     void TransitionTween(Image image, float duration)
     {
         image.DOFade(0,0);
         image.DOFade(1f, duration);
+    }
+
+    void TwoMenuTextTween(Image[] images, float duration)
+    {
+        foreach (var image in images)
+        {
+            Vector2 startPos = image.rectTransform.anchoredPosition;
+
+            image.rectTransform.DOAnchorPos(new Vector2(startPos.x, -1200f), 0f);
+            image.rectTransform.DOAnchorPos(startPos, duration).SetEase(Ease.InOutCubic);
+            image.DOFade(0f, 0f);
+            image.DOFade(1f, duration).SetEase(Ease.InOutCubic);
+        }
     }
 
     void MenuTween(Image[] images, float duration)
@@ -123,6 +193,32 @@ public class UIAnim : MonoBehaviour
             float startPos = overlay.anchoredPosition.x;
 
             loopSequence.Insert(0f, overlay.DOAnchorPos(new Vector2(startPos + 900f, 0f), 3f));
+        }
+
+        loopSequence.SetLoops(-1, LoopType.Restart);
+    }
+
+    void FontOverlayTweenTwo()
+    {
+        Image[] images;
+        loopSequence = DOTween.Sequence();
+
+        switch (isOur)
+        {
+            case true:
+                images = ourOverlays;
+                break;
+            case false:
+                images = susOverlays;
+                break;
+        }
+        
+
+        foreach (var image in images)
+        {
+            Vector2 startPos = image.rectTransform.anchoredPosition;
+
+            loopSequence.Insert(0f, image.rectTransform.DOAnchorPos(new Vector2(startPos.x + 2000f, startPos.y), 3f));
         }
 
         loopSequence.SetLoops(-1, LoopType.Restart);

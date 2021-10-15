@@ -19,8 +19,11 @@ public class VideoBehav : MonoBehaviour
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
 
+    [SerializeField] Button homeButton;
+
     //Current videoClips[] index
     int curClip;
+    int curPlayerReset = 16;
     int curPlayer = 16;
     float videoRowCanvasPosY;
 
@@ -82,10 +85,11 @@ public class VideoBehav : MonoBehaviour
     public void PlayVideo(int index)
     {
         curClip = index;
+        curPlayer = curPlayerReset;
 
         //Make sure video canvas is visible
-        videoCanvas.transform.SetAsLastSibling();
-        videoCanvas.SetActive(true);
+        //videoCanvas.transform.SetAsLastSibling();
+        //videoCanvas.SetActive(true);
 
         CheckButton();
 
@@ -149,25 +153,23 @@ public class VideoBehav : MonoBehaviour
 
     void DisableButton(bool isEnable)
     {
-        nextButton.enabled = isEnable;
-        previousButton.enabled = isEnable;
+        nextButton.interactable = isEnable;
+        previousButton.interactable = isEnable;
+        homeButton.interactable = isEnable;
     }
 
     void CheckButton()
     {
-        if (curClip == videoClips.Length - 1)
+
+        if (curClip == 0)
         {
-            //nextButton.enabled = false;
-        }
-        else if (curClip == 0)
-        {
-            previousButton.enabled = false;
+            previousButton.interactable = false;
             Debug.Log("Disable up");
         }
         else
         {
-            previousButton.enabled = true;
-            nextButton.enabled = true;
+            previousButton.interactable = true;
+            nextButton.interactable = true;
             Debug.Log("Not Disable");
         }
     }
@@ -285,7 +287,7 @@ public class VideoBehav : MonoBehaviour
     }
 
     //clear render texture
-    void ClearOutRenderTexture(RenderTexture renderTexture)
+    public void ClearOutRenderTexture(RenderTexture renderTexture)
     {
         RenderTexture rt = RenderTexture.active;
         RenderTexture.active = renderTexture;

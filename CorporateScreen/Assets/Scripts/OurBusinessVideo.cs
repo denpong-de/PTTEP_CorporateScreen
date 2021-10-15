@@ -8,11 +8,12 @@ public class OurBusinessVideo : MonoBehaviour
 {
     VideoBehav videoBehav;
 
-    [SerializeField] GameObject videoPanel;
+    [SerializeField] RenderTexture renderTexture;
     [SerializeField] VideoPlayer videoPlayer;
     [SerializeField] VideoClip[] videoClips;
     [SerializeField] VideoClip[] videoClipLoops;
     [SerializeField] GameObject controlButtonCanvas;
+    [SerializeField] GameObject[] onVideoButtons;
     Button nextButton, previousButton;
 
     int curClip;
@@ -47,29 +48,39 @@ public class OurBusinessVideo : MonoBehaviour
         videoPlayer.loopPointReached -= EndReached;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void PlayVideo(int index)
     {
         curClip = index;
 
-        videoPanel.SetActive(true);
-        videoPanel.transform.SetAsLastSibling();
+        //videoPanel.SetActive(true);
+        //videoPanel.transform.SetAsLastSibling();
 
-        if (curClip >= 4 && curClip <= 7)
+        if (curClip == 0 || curClip == 3)
         {
+            if (curClip == 0)
+            {
+                previousButton.interactable = false;
+                onVideoButtons[0].SetActive(true);
+            }     
+            
             controlButtonCanvas.SetActive(true);
         }
-        if(curClip == 4)
+        else if (curClip >= 4 && curClip < 8)
         {
-            previousButton.interactable = false;
+            controlButtonCanvas.SetActive(true);
+            nextButton.interactable = true;
+            previousButton.interactable = true;
+        }
+        else if (curClip == 8)
+        {
+            controlButtonCanvas.SetActive(true);
+            nextButton.interactable = false;
+        }
+        else
+        {
+            controlButtonCanvas.SetActive(false);
         }
             
-        Debug.Log("Play Video");
         videoBehav.ChangeVideo(videoPlayer,videoClips[curClip],false);
     }
 
@@ -77,14 +88,26 @@ public class OurBusinessVideo : MonoBehaviour
     {
         curClip++;
 
-        if (curClip == 7)
+        if (curClip == 1)
+        {
+            previousButton.interactable = true;
+            curClip = 3;
+        }   
+        else if (curClip == 4)
+        {
+            Debug.Log("Load sustain");
+        }
+        else if (curClip == 8)
+        {
             nextButton.interactable = false;
+        } 
         else
         {
             nextButton.interactable = true;
             previousButton.interactable = true;
         }
-            
+
+        CheckOnVideoButton();
 
         videoBehav.ChangeVideo(videoPlayer, videoClips[curClip], false);
     }
@@ -93,15 +116,43 @@ public class OurBusinessVideo : MonoBehaviour
     {
         curClip--;
 
-        if (curClip == 4)
+        if (curClip == 2)
+        {
             previousButton.interactable = false;
+            curClip = 0;
+        }   
         else
         {
             nextButton.interactable = true;
             previousButton.interactable = true;
         }
-            
+
+        CheckOnVideoButton();
 
         videoBehav.ChangeVideo(videoPlayer, videoClips[curClip], false);
+    }
+
+    void CheckOnVideoButton()
+    {
+        if(curClip == 0)
+        {
+            onVideoButtons[0].SetActive(true);
+            onVideoButtons[1].SetActive(false);
+        }
+        else if (curClip == 3)
+        {
+            onVideoButtons[1].SetActive(true);
+        }
+        else
+        {
+            onVideoButtons[0].SetActive(false);
+            onVideoButtons[1].SetActive(false);
+        }
+    }
+
+    public void ClearVideo()
+    {
+        videoPlayer.Stop();
+        videoBehav.ClearOutRenderTexture(renderTexture);
     }
 }

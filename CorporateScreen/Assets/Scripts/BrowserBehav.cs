@@ -5,28 +5,25 @@ using UnityEngine.UI;
 
 public class BrowserBehav : MonoBehaviour
 {
+    //For Using OurBusiness's method
     [SerializeField] OurBusinessVideo ourBusinessVideo;
 
-    public GameObject browser;
+    //For redirect to url
+    [SerializeField] GameObject browser;
+    SimpleWebBrowser.WebBrowser2D webBrowser2D;
+    [SerializeField] GameObject hideImage;
 
     [SerializeField] GameObject browserCanvas;
-    [SerializeField] Button closeButton;
+    [SerializeField] Button homeButton;
     [SerializeField] GameObject[] backToText;
-    [SerializeField] InputField urlInput;
+    [SerializeField] GameObject[] onVideoButtons;
     [SerializeField] string[] urls;
 
     int curUrl;
 
-    // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        webBrowser2D = browser.GetComponent<SimpleWebBrowser.WebBrowser2D>();
     }
 
     public void OpenBrowser(int urlIndex)
@@ -37,10 +34,11 @@ public class BrowserBehav : MonoBehaviour
 
         browserCanvas.transform.SetAsLastSibling();
 
-        browser.GetComponent<SimpleWebBrowser.WebBrowser2D>().Navigate(urls[urlIndex]);
-        //webBrowser2D.Navigate(urls[urlIndex]);
+        hideImage.SetActive(false);
 
-        closeButton.onClick.AddListener(OnClickHomeButton);
+        webBrowser2D.Navigate(urls[urlIndex]);
+
+        homeButton.onClick.AddListener(OnClickHomeButton);
 
         if (curUrl == 0)
             return;
@@ -52,11 +50,28 @@ public class BrowserBehav : MonoBehaviour
     {
         browserCanvas.transform.SetAsFirstSibling();
 
-        if (curUrl == 0)
+        hideImage.SetActive(true);
+
+        if (curUrl==0)
+        {
             return;
+        }
 
         backToText[0].SetActive(false);
 
-        //ourBusinessVideo.PlayVideo(0);
+        if (curUrl >= 7 && curUrl <= 13)
+        {
+            if(curUrl >= 7 && curUrl <= 9)
+            {
+                onVideoButtons[1].SetActive(false);
+            }
+            else if (curUrl >= 10 && curUrl <= 13)
+            {
+                onVideoButtons[2].SetActive(false);
+            }
+            
+            onVideoButtons[0].SetActive(true);
+            ourBusinessVideo.PlayVideo(0);
+        }
     }
 }
