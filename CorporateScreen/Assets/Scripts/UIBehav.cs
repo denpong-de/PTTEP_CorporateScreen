@@ -116,11 +116,6 @@ public class UIBehav : MonoBehaviour
 
     void PreventInput()
     {
-        if(currentCanvas == 5)
-        {
-            return;
-        }
-
         noInputPanel.transform.SetAsLastSibling();
         StartCoroutine(ChangeSceneDelay(noInputPanel,noInputPanel,2.6f));
     }
