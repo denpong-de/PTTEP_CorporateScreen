@@ -75,12 +75,15 @@ public class OurBusinessVideo : MonoBehaviour
         {
             controlButtonCanvas.SetActive(true);
             nextButton.interactable = false;
+            videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "AWARDS.mp4");
+            videoPlayer.Play();
         }
         else
         {
             controlButtonCanvas.SetActive(false);
         }
-            
+
+        if (curClip == 8) return;
         videoBehav.ChangeVideo(videoPlayer,videoClips[curClip],false);
     }
 
