@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class OurBusinessVideo : MonoBehaviour
 {
+    //For external class
     VideoBehav videoBehav;
 
     [SerializeField] RenderTexture renderTexture;
@@ -18,27 +17,25 @@ public class OurBusinessVideo : MonoBehaviour
 
     int curClip;
 
-    // Start is called before the first frame update
     void Start()
     {
         videoBehav = GetComponent<VideoBehav>();
 
+        //Subscribe to event.
         videoPlayer.loopPointReached += EndReached;
 
+        //Get Button form controlButton canvas
         nextButton = controlButtonCanvas.transform.GetChild(0).GetComponent<Button>();
         previousButton = controlButtonCanvas.transform.GetChild(1).GetComponent<Button>();
     }
 
+    //Play loop clip when video end
     void EndReached(VideoPlayer videoPlayer)
     {
         //if there is no loop version of that clip do nothing
         if (videoClipLoops[curClip] == null) return;
 
         //Play current clip but loop version
-        //videoPlayer.clip = videoClipLoops[curClip];
-        //videoPlayer.isLooping = true;
-        //videoPlayer.Play();
-
         videoBehav.ChangeVideo(videoPlayer, videoClipLoops[curClip], true);
     }
 
@@ -51,9 +48,6 @@ public class OurBusinessVideo : MonoBehaviour
     public void PlayVideo(int index)
     {
         curClip = index;
-
-        //videoPanel.SetActive(true);
-        //videoPanel.transform.SetAsLastSibling();
 
         if (curClip == 0 || curClip == 3)
         {
@@ -85,7 +79,6 @@ public class OurBusinessVideo : MonoBehaviour
             controlButtonCanvas.SetActive(false);
         }
 
-        //if (curClip == 8) return;
         videoBehav.ChangeVideo(videoPlayer,videoClips[curClip],false);
     }
 
@@ -98,10 +91,6 @@ public class OurBusinessVideo : MonoBehaviour
             previousButton.interactable = true;
             curClip = 3;
         }   
-        else if (curClip == 4)
-        {
-            Debug.Log("Load sustain");
-        }
         else if (curClip == 8)
         {
             nextButton.interactable = false;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UIBehav : MonoBehaviour
 {
+    //For external class
     UIAnim uiAnim;
 
     [SerializeField]GameObject masterCanvas;
@@ -21,7 +22,12 @@ public class UIBehav : MonoBehaviour
         GameEvents.current.onStopScreenSaver += StartAnim;
         GameEvents.current.onStartScreenSaver += StopAnim;
 
-        //Setup valueble
+        SetupValueble();
+    }
+
+    void SetupValueble()
+    {
+        //Get gameObject form master canvas
         mainCanvas = masterCanvas.transform.GetChild(0).gameObject;
         aboutCanvas = masterCanvas.transform.GetChild(1).gameObject;
         videoCanvas = masterCanvas.transform.GetChild(2).gameObject;
@@ -30,6 +36,7 @@ public class UIBehav : MonoBehaviour
         videoDCanvas = masterCanvas.transform.GetChild(5).gameObject;
         noInputPanel = masterCanvas.transform.GetChild(6).gameObject;
 
+        //Add all canvas to canvases
         canvases.Add(mainCanvas);
         canvases.Add(aboutCanvas);
         canvases.Add(videoCanvas);
@@ -91,25 +98,27 @@ public class UIBehav : MonoBehaviour
 
         if(canvasIndex != 0)
         {
+            //Make currentCanvas visible
             canvases[currentCanvas].transform.SetAsLastSibling();
+
             StartCoroutine(ChangeSceneDelay(canvases[currentCanvas], canvases[closeCanvasIndex], 2.5f));
+            
+            //Prevent form do another tween while tweening
             PreventInput();
         }
-
     }
 
     public void ReturnToMain()
     {
+        //Make main canvas visible
         mainCanvas.transform.SetAsLastSibling();
+
         if(currentCanvas != 0)
-        {
             StartCoroutine(ChangeSceneDelay(mainCanvas, canvases[currentCanvas], 2.5f));
-        }
-        if (videoCanvas.gameObject.activeInHierarchy)
-        {
-            StartCoroutine(ChangeSceneDelay(mainCanvas, videoDCanvas, 2.5f));
-        }
+
         uiAnim.MainCanvasTween(2.5f);
+
+        //Prevent form do another tween while tweening
         PreventInput();
         currentCanvas = 0;
     }
