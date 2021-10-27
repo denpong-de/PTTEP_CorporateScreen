@@ -1,11 +1,8 @@
-$(document).ready(function(){
-
-    $('#popup-btn').click(function(){
-        $('#popup').toggle();
-    });
-
-    function ShowWebPopup(){
-        $('#popup').toggle();
-    }
-
-});
+function ShowWebPopup() {
+  var popup = document.getElementById("popup");
+  if(popup.style.display === "none"){
+    popup.style.display = "block";
+  } else {
+    popup.style.display = "none";
+  }
+}

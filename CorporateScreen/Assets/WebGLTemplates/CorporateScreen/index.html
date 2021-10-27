@@ -9,11 +9,11 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <!-- Custom iframe popup start line -->
+      <!-- Custom web popup start line -->
       <div id="popup">
-        <iframe src="https://www.arv.co.th" height="768" width="1024"></iframe>
+        <iframe src="https://www.arv.co.th" frameborder="0"></iframe>
       </div>
-      <!-- Custom iframe popup end line -->
+      <!-- Custom web popup end line -->
       <canvas id="unity-canvas" width=1920 height=1080></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -29,11 +29,9 @@
         <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">CorporateScreen</div>
       </div>
-      <button id="popup-btn"> toggle popup</button>
+      <button id="popup-btn" onclick="ShowWebPopup()"> toggle popup</button>
     </div>
 
-    <!-- JQuery  -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom JS script -->
     <script src="TemplateData\script.js"></script>
     <!-- Unity default script -->

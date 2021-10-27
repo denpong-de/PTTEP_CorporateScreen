@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
@@ -7,9 +6,9 @@ using DG.Tweening;
 
 public class VideoBehav : MonoBehaviour
 {
+    //For external class
     [SerializeField] UIBehav uiBehav;
 
-    [SerializeField] GameObject videoCanvas;
     [SerializeField] RectTransform videoRowCanvas;
     [SerializeField] RectTransform[] videoPanels;
     [SerializeField] VideoPlayer[] videoPlayers; 
@@ -18,18 +17,15 @@ public class VideoBehav : MonoBehaviour
     [SerializeField] RenderTexture[] renderTextures;
     [SerializeField] Button nextButton;
     [SerializeField] Button previousButton;
-
     [SerializeField] Button homeButton;
 
-    //Current videoClips[] index
-    int curClip;
-    int curPlayerReset = 16;
-    int curPlayer = 16;
+    //For slide tween
+    int curClip, curPlayer;
     float videoRowCanvasPosY;
-
-    Vector2 videoRowCanvasStartPos;
+    //For reset position when pressed home or change canvas
+    float videoRowCanvasStartPos;
     List<float> videoPanelStartPos = new List<float>();
-
+    //For playing video in a same panel
     bool isSkipFrame;
 
     void Start()
@@ -40,31 +36,26 @@ public class VideoBehav : MonoBehaviour
             videoPlayer.loopPointReached += EndReached;
         }
 
+        //Save all video players initial position for reset video players position
         SaveStartPos();
     }
 
     //Play loop clip when video end
     void EndReached(VideoPlayer videoPlayer)
     {
-        #if(UNITY_EDITOR)
-        Debug.Log("End reached");
-        #endif
-
         //if there is no loop version of that clip do nothing
         if (videoClipLoops[curClip] == null) return;
 
         //Play current clip but loop version
-        //videoPlayer.clip = videoClipLoops[curClip];
-        //videoPlayer.isLooping = true;
-        //videoPlayer.Play();
-
         ChangeVideo(videoPlayer,videoClipLoops[curClip],true);
     }
 
     void SaveStartPos()
     {
-        videoRowCanvasStartPos = videoRowCanvas.anchoredPosition;
+        //Save Row Canvas initial position
+        videoRowCanvasStartPos = videoRowCanvas.anchoredPosition.y;
 
+        //Save all videoPanels initial position
         for (int i = 0; i < videoPanels.Length; i++)
         {
             float startPos = videoPanels[i].anchoredPosition.y;
@@ -85,12 +76,10 @@ public class VideoBehav : MonoBehaviour
     public void PlayVideo(int index)
     {
         curClip = index;
-        curPlayer = curPlayerReset;
+        //Play on VideoB Panel
+        curPlayer = 1;
 
-        //Make sure video canvas is visible
-        //videoCanvas.transform.SetAsLastSibling();
-        //videoCanvas.SetActive(true);
-
+        //If it's first clip disable previous button else enable it
         CheckButton();
 
         //Play videoClips[index] in videoPlayers[1]
@@ -104,23 +93,31 @@ public class VideoBehav : MonoBehaviour
         if(curClip == videoClips.Length -1)
         {
             uiBehav.ChangeScene(2);
+            //Reset video canvas and it child to initial state
+            CloseAllVideoCanvas();
             return;
         }
 
+        //Else Play next clip
         curClip++;
+        isSkipFrame = false;
 
-        if(curClip != 4)
+        //If it's not clip 4 tween canvas down else just play clip
+        if (curClip != 4)
         {
+            //Next Player
             curPlayer++;
-            videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y + 2161.01f;
+            curPlayer = curPlayer % 3;
 
+            //Prevent form do another tween while tweening
             DisableButton(false);
 
-            //Move to next panel
+            videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y + 2161.01f;
+
+            //Move to next panel when finished SwitchPanelDown
             videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
                 .OnComplete(SwitchPanelDown);
         }
-        isSkipFrame = false;
 
         //Play video on next panel
         NextVideoPlay();
@@ -131,19 +128,36 @@ public class VideoBehav : MonoBehaviour
     {
         curClip--;
 
+        //If it's not clip 4 tween canvas down else just play clip
         if (curClip != 3)
         {
-            curPlayer--;
+            //Switch to previous player
+            switch (curPlayer)
+            {
+                case 1:
+                    curPlayer = 0;
+                    break;
+                case 2:
+                    curPlayer = 1;
+                    break;
+                default:
+                    curPlayer = 2;
+                    break;
+            }
+
+            //Prevent form do another tween while tweening
+            DisableButton(false);
             isSkipFrame = false;
+
             videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y - 2161.01f;
 
-            DisableButton(false);
-
+            //Move to previous panel when finished SwitchPanelUp
             videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
                 .OnComplete(SwitchPanelUp);
         }
         else
         {
+            //Skip intro of a clip for more fluid transition 
             isSkipFrame = true;
         }
 
@@ -160,24 +174,22 @@ public class VideoBehav : MonoBehaviour
 
     void CheckButton()
     {
-
-        if (curClip == 0)
+        switch (curClip)
         {
-            previousButton.interactable = false;
-            Debug.Log("Disable up");
-        }
-        else
-        {
-            previousButton.interactable = true;
-            nextButton.interactable = true;
-            Debug.Log("Not Disable");
+            case 0:
+                previousButton.interactable = false;
+                break;
+            default:
+                previousButton.interactable = true;
+                nextButton.interactable = true;
+                break;
         }
     }
 
-    //VideoPlayer Behav
+    //VideoPlayer Behavior
     void NextVideoPlay()
     {
-        ChangeVideo(videoPlayers[curPlayer % 3], videoClips[curClip], false);
+        ChangeVideo(videoPlayers[curPlayer], videoClips[curClip], false);
     }
 
     public void ChangeVideo(VideoPlayer videoPlayer, VideoClip clip, bool isLooping)
@@ -187,9 +199,7 @@ public class VideoBehav : MonoBehaviour
         videoPlayer.Play();
 
         if (isSkipFrame)
-        {
             videoPlayer.frame = 80;
-        }
     }
 
     //Make the first panel goto last 
@@ -198,7 +208,7 @@ public class VideoBehav : MonoBehaviour
         int panelThatSwitch;
         int previousPlayer;
 
-        switch (curPlayer % 3)
+        switch (curPlayer)
         {
             case 1:
                 panelThatSwitch = 2;
@@ -215,14 +225,8 @@ public class VideoBehav : MonoBehaviour
         }
 
         float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y - 6483.03f;
-        videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(1920, stopPanelPosY), 0);
 
-        StartCoroutine(ClosePreviousVideo(previousPlayer, 0));
-
-        DisableButton(true);
-
-        //if it is the last clip disable newt button
-        CheckButton();
+        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosY);
     }
 
     //Make the last panel goto first 
@@ -231,14 +235,14 @@ public class VideoBehav : MonoBehaviour
         int panelThatSwitch;
         int previousPlayer;
 
-        switch (curPlayer % 3)
+        switch (curPlayer)
         {
             case 1:
                 panelThatSwitch = 0;
                 previousPlayer = 2;
                 break;
             case 2:
-                panelThatSwitch = 1;
+                panelThatSwitch = 1; 
                 previousPlayer = 0;
                 break;
             default:
@@ -248,10 +252,17 @@ public class VideoBehav : MonoBehaviour
         }
 
         float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y + 6483.03f;
+
+        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosY);
+    }
+
+    void TweenPanel(int panelThatSwitch, int previousPlayer,float stopPanelPosY)
+    {
         videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(1920, stopPanelPosY), 0);
 
-        StartCoroutine(ClosePreviousVideo(previousPlayer, 0));
+        ClosePreviousVideo(previousPlayer);
 
+        //Enable buttons
         DisableButton(true);
 
         //if it is the last clip disable newt button
@@ -259,9 +270,8 @@ public class VideoBehav : MonoBehaviour
     }
 
     //Close previous player when tween is finished 
-    IEnumerator ClosePreviousVideo(int videoPlayer ,float waitTime)
+    void ClosePreviousVideo(int videoPlayer)
     {
-        yield return new WaitForSeconds(waitTime);
         videoPlayers[videoPlayer].Stop();
         ClearOutRenderTexture(renderTextures[videoPlayer]);
     }
@@ -282,6 +292,7 @@ public class VideoBehav : MonoBehaviour
             ClearOutRenderTexture(renderTexture);
         }
 
+        //Reset bool & canvas position
         isSkipFrame = false;
         ResetCanvasPos();
     }
@@ -297,11 +308,11 @@ public class VideoBehav : MonoBehaviour
 
     void ResetCanvasPos()
     {
-        videoRowCanvas.anchoredPosition = videoRowCanvasStartPos;
+        videoRowCanvas.DOAnchorPos(new Vector2(0,videoRowCanvasStartPos),0);
 
         for (int i = 0; i < videoPanels.Length; i++)
         {
-            videoPanels[i].DOAnchorPos(new Vector2(1920,videoPanelStartPos[i]),0f);
+            videoPanels[i].DOAnchorPos(new Vector2(1920,videoPanelStartPos[i]),0);
         }
     }
 }

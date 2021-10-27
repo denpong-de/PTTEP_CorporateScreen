@@ -33,10 +33,6 @@ public class ScreenSaverBehav : MonoBehaviour
 
     void IdleCheck()
     {
-        #if (UNITY_EDITOR)
-        Debug.Log(Time.time - LastIdleTime + ":" + config.ScreenSaverWaitTime);
-        #endif
-
         //Enable ScreenSaver Canvas & disable this gameObject(ScreenSaver Manager)
         //You can config ScreenSaver wait time in Assets>Config
         if (Input.GetButton("Fire1"))
