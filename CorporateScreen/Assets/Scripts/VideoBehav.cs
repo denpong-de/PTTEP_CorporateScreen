@@ -102,8 +102,12 @@ public class VideoBehav : MonoBehaviour
         curClip++;
         isSkipFrame = false;
 
-        //If it's not clip 4 tween canvas down else just play clip
-        if (curClip != 4)
+        //If it's clip 2 or 5 just play clip else tween canvas down & play clip
+        if (curClip == 2 || curClip == 5)
+        {
+            //do nothing
+        }
+        else
         {
             //Next Player
             curPlayer++;
@@ -129,7 +133,15 @@ public class VideoBehav : MonoBehaviour
         curClip--;
 
         //If it's not clip 4 tween canvas down else just play clip
-        if (curClip != 3)
+        if (curClip == 1 || curClip == 4)
+        {
+            if(curClip == 4)
+            {
+                //Skip intro of a clip for more fluid transition 
+                isSkipFrame = true;
+            }
+        }
+        else
         {
             //Switch to previous player
             switch (curPlayer)
@@ -154,11 +166,6 @@ public class VideoBehav : MonoBehaviour
             //Move to previous panel when finished SwitchPanelUp
             videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
                 .OnComplete(SwitchPanelUp);
-        }
-        else
-        {
-            //Skip intro of a clip for more fluid transition 
-            isSkipFrame = true;
         }
 
         //Play video on next panel
