@@ -25,8 +25,8 @@ public class OurBusinessVideo : MonoBehaviour
         videoPlayer.loopPointReached += EndReached;
 
         //Get Button form controlButton canvas
-        nextButton = controlButtonCanvas.transform.GetChild(0).GetComponent<Button>();
-        previousButton = controlButtonCanvas.transform.GetChild(1).GetComponent<Button>();
+        nextButton = controlButtonCanvas.transform.GetChild(1).GetComponent<Button>();
+        previousButton = controlButtonCanvas.transform.GetChild(2).GetComponent<Button>();
     }
 
     //Play loop clip when video end
@@ -68,6 +68,7 @@ public class OurBusinessVideo : MonoBehaviour
         else if (curClip == 8)
         {
             controlButtonCanvas.SetActive(true);
+            previousButton.interactable = true;
             nextButton.interactable = false;
 
             //for WebGL
@@ -76,7 +77,7 @@ public class OurBusinessVideo : MonoBehaviour
         }
         else
         {
-            controlButtonCanvas.SetActive(false);
+            //controlButtonCanvas.SetActive(false);
         }
 
         videoBehav.ChangeVideo(videoPlayer,videoClips[curClip],false);

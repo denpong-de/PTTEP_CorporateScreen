@@ -110,6 +110,8 @@ public class UIBehav : MonoBehaviour
 
     public void ReturnToMain()
     {
+        uiAnim.KillLoopSequence();
+
         //Make main canvas visible
         mainCanvas.transform.SetAsLastSibling();
 

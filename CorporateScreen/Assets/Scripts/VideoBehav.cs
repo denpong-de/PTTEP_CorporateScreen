@@ -21,7 +21,7 @@ public class VideoBehav : MonoBehaviour
 
     //For slide tween
     int curClip, curPlayer;
-    float videoRowCanvasPosY;
+    float videoRowCanvasPosX;
     //For reset position when pressed home or change canvas
     float videoRowCanvasStartPos;
     List<float> videoPanelStartPos = new List<float>();
@@ -53,12 +53,12 @@ public class VideoBehav : MonoBehaviour
     void SaveStartPos()
     {
         //Save Row Canvas initial position
-        videoRowCanvasStartPos = videoRowCanvas.anchoredPosition.y;
+        videoRowCanvasStartPos = videoRowCanvas.anchoredPosition.x;
 
         //Save all videoPanels initial position
         for (int i = 0; i < videoPanels.Length; i++)
         {
-            float startPos = videoPanels[i].anchoredPosition.y;
+            float startPos = videoPanels[i].anchoredPosition.x;
             videoPanelStartPos.Add(startPos);
         }
     }
@@ -116,10 +116,10 @@ public class VideoBehav : MonoBehaviour
             //Prevent form do another tween while tweening
             DisableButton(false);
 
-            videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y + 2161.01f;
+            videoRowCanvasPosX = videoRowCanvas.anchoredPosition.x - 3840f;
 
             //Move to next panel when finished SwitchPanelDown
-            videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
+            videoRowCanvas.DOAnchorPos(new Vector2(videoRowCanvasPosX, 0), 2.5f)
                 .OnComplete(SwitchPanelDown);
         }
 
@@ -161,10 +161,10 @@ public class VideoBehav : MonoBehaviour
             DisableButton(false);
             isSkipFrame = false;
 
-            videoRowCanvasPosY = videoRowCanvas.anchoredPosition.y - 2161.01f;
+            videoRowCanvasPosX = videoRowCanvas.anchoredPosition.x + 3840f;
 
             //Move to previous panel when finished SwitchPanelUp
-            videoRowCanvas.DOAnchorPos(new Vector2(0, videoRowCanvasPosY), 2.5f)
+            videoRowCanvas.DOAnchorPos(new Vector2(videoRowCanvasPosX, 0), 2.5f)
                 .OnComplete(SwitchPanelUp);
         }
 
@@ -231,9 +231,9 @@ public class VideoBehav : MonoBehaviour
                 break;
         }
 
-        float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y - 6483.03f;
+        float stopPanelPosX = videoPanels[panelThatSwitch].anchoredPosition.x + 11520;
 
-        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosY);
+        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosX);
     }
 
     //Make the last panel goto first 
@@ -258,14 +258,14 @@ public class VideoBehav : MonoBehaviour
                 break;
         }
 
-        float stopPanelPosY = videoPanels[panelThatSwitch].anchoredPosition.y + 6483.03f;
+        float stopPanelPosX = videoPanels[panelThatSwitch].anchoredPosition.x - 11520;
 
-        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosY);
+        TweenPanel(panelThatSwitch, previousPlayer, stopPanelPosX);
     }
 
-    void TweenPanel(int panelThatSwitch, int previousPlayer,float stopPanelPosY)
+    void TweenPanel(int panelThatSwitch, int previousPlayer,float stopPanelPosX)
     {
-        videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(1920, stopPanelPosY), 0);
+        videoPanels[panelThatSwitch].DOAnchorPos(new Vector2(stopPanelPosX, -1080), 0);
 
         ClosePreviousVideo(previousPlayer);
 
@@ -315,11 +315,11 @@ public class VideoBehav : MonoBehaviour
 
     void ResetCanvasPos()
     {
-        videoRowCanvas.DOAnchorPos(new Vector2(0,videoRowCanvasStartPos),0);
+        videoRowCanvas.DOAnchorPos(new Vector2(videoRowCanvasStartPos, 0),0);
 
         for (int i = 0; i < videoPanels.Length; i++)
         {
-            videoPanels[i].DOAnchorPos(new Vector2(1920,videoPanelStartPos[i]),0);
+            videoPanels[i].DOAnchorPos(new Vector2(videoPanelStartPos[i], -1080),0);
         }
     }
 }
