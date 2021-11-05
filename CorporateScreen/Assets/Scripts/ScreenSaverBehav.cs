@@ -14,8 +14,8 @@ public class ScreenSaverBehav : MonoBehaviour
 
     void Start()
     {
-        //Call onStartScreenSaver event
-        GameEvents.current.StartScreenSaver();
+        //Wait for event finished initialize
+        Invoke("CallEvent",0.3f);
     }
 
     void Update()
@@ -55,5 +55,11 @@ public class ScreenSaverBehav : MonoBehaviour
 
         //Reset Last idle time
         LastIdleTime = Time.time;
+    }
+
+    private void CallEvent()
+    {
+        //Call onStartScreenSaver event
+        GameEvents.current.StartScreenSaver();
     }
 }

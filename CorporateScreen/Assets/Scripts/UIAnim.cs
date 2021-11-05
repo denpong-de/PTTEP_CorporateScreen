@@ -82,12 +82,8 @@ public class UIAnim : MonoBehaviour
 
         //Right background text Animation
         Sequence bgTextSequence = DOTween.Sequence();
-        bgTextSequence.Append(aboutBgText.DOColor(new Color(0,0,0,1),0))
-            .Join(aboutBgText.DOColor(new Color(1,1,1,.42f),duration).SetEase(Ease.InOutCubic))
-            .Join(aboutBgText.transform.DOScale(new Vector3(0.3755f, 0.3755f, 0.3755f),0f))
-            .Join(aboutBgText.transform.DOScale(new Vector3(1,1,1),duration).SetEase(Ease.InOutCubic))
-            .Join(aboutBgText.rectTransform.DOAnchorPos(new Vector2(499,493),0))
-            .Join(aboutBgText.rectTransform.DOAnchorPos(stopBgTextPos, duration).SetEase(Ease.OutExpo));
+        bgTextSequence.Append(aboutBgText.rectTransform.DOAnchorPos(new Vector2(499, 493), 0))
+            .Join(aboutBgText.rectTransform.DOAnchorPos(stopBgTextPos, duration).SetEase(Ease.OutCubic));
 
         //White BG prevent form see through canvas
         TransitionTween(aboutTransition, duration);
