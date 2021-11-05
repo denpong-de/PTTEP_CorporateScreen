@@ -6,6 +6,7 @@ public class ScreenSaverVideo : MonoBehaviour
     //For external class
     [SerializeField] VideoBehav videoBehav;
 
+    [SerializeField] GameObject ScreenSaverCanvas;
     [SerializeField] VideoPlayer videoPlayer;
     [SerializeField] VideoClip[] videoClips;
     [SerializeField] RenderTexture renderTexture;
@@ -42,12 +43,19 @@ public class ScreenSaverVideo : MonoBehaviour
 
     void ClearVideo()
     {
+        Invoke("ClearVideoDelay",0.3f);
+    }
+
+    void ClearVideoDelay()
+    {
         //stop video players
         if (videoPlayer != null)
             videoPlayer.Stop();
 
         //Clear render textures
         ClearOutRenderTexture(renderTexture);
+
+        ScreenSaverCanvas.SetActive(false);
     }
 
     //clear render texture

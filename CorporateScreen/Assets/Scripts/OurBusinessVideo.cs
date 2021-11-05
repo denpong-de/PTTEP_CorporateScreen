@@ -53,28 +53,19 @@ public class OurBusinessVideo : MonoBehaviour
     {
         config.curClip = index;
 
-        if (config.curClip == 0 || config.curClip == 3)
+        //if (config.curClip == 0 || config.curClip == 3)
+        //{
+        //    controlButtonCanvas.SetActive(true);
+        //}
+        if (config.curClip >= 4 && config.curClip < 9)
         {
-            if (config.curClip == 0)
-            {
-                onVideoButtons[0].SetActive(true);
-            } 
-            else if(config.curClip == 3)
-            {
-                onVideoButtons[1].SetActive(true);
-            }
-            
-            controlButtonCanvas.SetActive(true);
-        }
-        else if (config.curClip >= 4 && config.curClip < 9)
-        {
-            controlButtonCanvas.SetActive(true);
+            //controlButtonCanvas.SetActive(true);
             nextButton.interactable = true;
             previousButton.interactable = true;
         }
         else if (config.curClip == 9)
         {
-            controlButtonCanvas.SetActive(true);
+            //controlButtonCanvas.SetActive(true);
             previousButton.interactable = true;
             nextButton.interactable = false;
 
@@ -86,6 +77,8 @@ public class OurBusinessVideo : MonoBehaviour
         {
             //controlButtonCanvas.SetActive(false);
         }
+
+        CheckOnVideoButton();
 
         videoBehav.ChangeVideo(videoPlayer,videoClips[config.curClip],false);
     }
@@ -102,6 +95,7 @@ public class OurBusinessVideo : MonoBehaviour
         else if(config.curClip == 4)
         {
             uiBehav.ChangeScene(10);
+            ClearVideo();
             return;
         }
         else if (config.curClip == 5)
@@ -130,6 +124,7 @@ public class OurBusinessVideo : MonoBehaviour
         if (config.curClip == -1)
         {
             uiBehav.ChangeScene(9);
+            ClearVideo();
             return;
         }
         else if (config.curClip == 2)
@@ -143,6 +138,7 @@ public class OurBusinessVideo : MonoBehaviour
         else if (config.curClip == 4)
         {
             uiBehav.ChangeScene(10);
+            ClearVideo();
             return;
         }
         else
@@ -162,15 +158,26 @@ public class OurBusinessVideo : MonoBehaviour
         {
             onVideoButtons[0].SetActive(true);
             onVideoButtons[1].SetActive(false);
+            onVideoButtons[2].SetActive(false);
         }
         else if (config.curClip == 3)
         {
+            onVideoButtons[0].SetActive(false);
             onVideoButtons[1].SetActive(true);
+            onVideoButtons[2].SetActive(false);
         }
-        else
+        else if (config.curClip == 7)
         {
             onVideoButtons[0].SetActive(false);
             onVideoButtons[1].SetActive(false);
+            onVideoButtons[2].SetActive(true);
+        }
+        else
+        {
+            for (int i = 0; i < onVideoButtons.Length; i++)
+            {
+                onVideoButtons[i].SetActive(false);
+            }
         }
     }
 

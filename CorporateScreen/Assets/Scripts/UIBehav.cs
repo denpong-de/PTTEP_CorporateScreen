@@ -159,8 +159,18 @@ public class UIBehav : MonoBehaviour
 
     void StartAnim()
     {
-        ChangeScene(currentCanvas);
-        PreventInput();
+        //ChangeScene(currentCanvas);
+        //PreventInput();
+        if(currentCanvas == 0)
+        {
+            ChangeScene(currentCanvas);
+            PreventInput();
+        }
+        else
+        {
+            ReturnToMain();
+        }
+
     }
 
     void StopAnim()
