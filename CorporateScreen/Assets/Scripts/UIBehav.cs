@@ -7,8 +7,12 @@ public class UIBehav : MonoBehaviour
     //For external class
     UIAnim uiAnim;
 
+    //ScriptAbleObject
+    [SerializeField] ConfigScriptableObject config;
+
     [SerializeField]GameObject masterCanvas;
-    GameObject mainCanvas, aboutCanvas, videoCanvas, businessCanvas, sustainCanvas, videoDCanvas, noInputPanel;
+    GameObject mainCanvas, aboutCanvas, videoCanvas, businessCanvas, 
+        sustainCanvas, videoDCanvas, noInputPanel;
     List<GameObject> canvases = new List<GameObject>();
 
     int currentCanvas = 0;
@@ -77,6 +81,7 @@ public class UIBehav : MonoBehaviour
                 uiAnim.SusTween(2.5f);
                 currentCanvas = 4;
                 closeCanvasIndex = 0;
+                config.curClip = 4;
                 break;
             case 5:
                 currentCanvas = 5;
@@ -93,6 +98,20 @@ public class UIBehav : MonoBehaviour
             case 8:
                 currentCanvas = 5;
                 closeCanvasIndex = 4;
+                break;
+            case 9:
+                uiAnim.OurBusinessTween(2.5f);
+                currentCanvas = 3;
+                closeCanvasIndex = 5;
+                break;
+            case 10:
+                uiAnim.SusTween(2.5f);
+                currentCanvas = 4;
+                closeCanvasIndex = 5;
+                break;
+            case 11:
+                currentCanvas = 2;
+                closeCanvasIndex = 3;
                 break;
         }
 

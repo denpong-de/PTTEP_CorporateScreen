@@ -41,7 +41,7 @@ public class BrowserBehav : MonoBehaviour
         if (curUrl == 0)
             return;
 
-        backToText[0].SetActive(true);
+        //backToText[0].SetActive(true);
     }
 
     void OnClickHomeButton()
@@ -55,21 +55,21 @@ public class BrowserBehav : MonoBehaviour
             return;
         }
 
-        backToText[0].SetActive(false);
+        //backToText[0].SetActive(false);
 
-        if (curUrl >= 7 && curUrl <= 13)
-        {
-            if(curUrl >= 7 && curUrl <= 9)
-            {
-                onVideoButtons[1].SetActive(false);
-            }
-            else if (curUrl >= 10 && curUrl <= 13)
-            {
-                onVideoButtons[2].SetActive(false);
-            }
+        //if (curUrl >= 7 && curUrl <= 13)
+        //{
+        //    if(curUrl >= 7 && curUrl <= 9)
+        //    {
+        //        onVideoButtons[1].SetActive(false);
+        //    }
+        //    else if (curUrl >= 10 && curUrl <= 13)
+        //    {
+        //        onVideoButtons[2].SetActive(false);
+        //    }
             
-            onVideoButtons[0].SetActive(true);
-            ourBusinessVideo.PlayVideo(0);
-        }
+        //    onVideoButtons[0].SetActive(true);
+        //    ourBusinessVideo.PlayVideo(0);
+        //}
     }
 }

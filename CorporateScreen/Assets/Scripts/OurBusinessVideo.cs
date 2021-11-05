@@ -6,6 +6,10 @@ public class OurBusinessVideo : MonoBehaviour
 {
     //For external class
     VideoBehav videoBehav;
+    [SerializeField] UIBehav uiBehav;
+
+    //ScriptAbleObject
+    [SerializeField] ConfigScriptableObject config;
 
     [SerializeField] RenderTexture renderTexture;
     [SerializeField] VideoPlayer videoPlayer;
@@ -33,10 +37,10 @@ public class OurBusinessVideo : MonoBehaviour
     void EndReached(VideoPlayer videoPlayer)
     {
         //if there is no loop version of that clip do nothing
-        if (videoClipLoops[curClip] == null) return;
+        if (videoClipLoops[config.curClip] == null) return;
 
         //Play current clip but loop version
-        videoBehav.ChangeVideo(videoPlayer, videoClipLoops[curClip], true);
+        videoBehav.ChangeVideo(videoPlayer, videoClipLoops[config.curClip], true);
     }
 
     //Unsubscribe all video players to EndReached method when close programs
@@ -47,25 +51,24 @@ public class OurBusinessVideo : MonoBehaviour
 
     public void PlayVideo(int index)
     {
-        curClip = index;
+        config.curClip = index;
 
-        if (curClip == 0 || curClip == 3)
+        if (config.curClip == 0 || config.curClip == 3)
         {
-            if (curClip == 0)
+            if (config.curClip == 0)
             {
-                previousButton.interactable = false;
                 onVideoButtons[0].SetActive(true);
             }     
             
             controlButtonCanvas.SetActive(true);
         }
-        else if (curClip >= 4 && curClip < 8)
+        else if (config.curClip >= 4 && config.curClip < 9)
         {
             controlButtonCanvas.SetActive(true);
             nextButton.interactable = true;
             previousButton.interactable = true;
         }
-        else if (curClip == 8)
+        else if (config.curClip == 9)
         {
             controlButtonCanvas.SetActive(true);
             previousButton.interactable = true;
@@ -80,19 +83,28 @@ public class OurBusinessVideo : MonoBehaviour
             //controlButtonCanvas.SetActive(false);
         }
 
-        videoBehav.ChangeVideo(videoPlayer,videoClips[curClip],false);
+        videoBehav.ChangeVideo(videoPlayer,videoClips[config.curClip],false);
     }
 
     public void NextVideo()
     {
-        curClip++;
+        config.curClip++;
 
-        if (curClip == 1)
+        if (config.curClip == 1)
         {
             previousButton.interactable = true;
-            curClip = 3;
-        }   
-        else if (curClip == 8)
+            config.curClip = 3;
+        }
+        else if(config.curClip == 4)
+        {
+            uiBehav.ChangeScene(10);
+            return;
+        }
+        else if (config.curClip == 5)
+        {
+            uiBehav.ChangeScene(8);
+        }
+        else if (config.curClip == videoClips.Length - 1)
         {
             nextButton.interactable = false;
         } 
@@ -104,18 +116,31 @@ public class OurBusinessVideo : MonoBehaviour
 
         CheckOnVideoButton();
 
-        videoBehav.ChangeVideo(videoPlayer, videoClips[curClip], false);
+        videoBehav.ChangeVideo(videoPlayer, videoClips[config.curClip], false);
     }
 
     public void PreviousVideo()
     {
-        curClip--;
+        config.curClip--;
 
-        if (curClip == 2)
+        if (config.curClip == -1)
         {
-            previousButton.interactable = false;
-            curClip = 0;
-        }   
+            uiBehav.ChangeScene(9);
+            return;
+        }
+        else if (config.curClip == 2)
+        {
+            config.curClip = 0;
+        }
+        else if (config.curClip == 3)
+        {
+            uiBehav.ChangeScene(8);
+        }
+        else if (config.curClip == 4)
+        {
+            uiBehav.ChangeScene(10);
+            return;
+        }
         else
         {
             nextButton.interactable = true;
@@ -124,17 +149,17 @@ public class OurBusinessVideo : MonoBehaviour
 
         CheckOnVideoButton();
 
-        videoBehav.ChangeVideo(videoPlayer, videoClips[curClip], false);
+        videoBehav.ChangeVideo(videoPlayer, videoClips[config.curClip], false);
     }
 
     void CheckOnVideoButton()
     {
-        if(curClip == 0)
+        if(config.curClip == 0)
         {
             onVideoButtons[0].SetActive(true);
             onVideoButtons[1].SetActive(false);
         }
-        else if (curClip == 3)
+        else if (config.curClip == 3)
         {
             onVideoButtons[1].SetActive(true);
         }
