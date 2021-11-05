@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Config
   m_EditorClassIdentifier: 
   ScreenSaverWaitTime: 120
+  curClip: 3

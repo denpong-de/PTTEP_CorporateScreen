@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /* In ScreenSaver_Canvas, It had button component when user touch the screen.
- * it will SetActive(false) itself and SetActive(true) ScreenSaver_Manager
+ * it will SetActive(false) itself and call StopScreenSaver()
  * and this code will run */
 public class ScreenSaverBehav : MonoBehaviour
 {
@@ -10,17 +10,9 @@ public class ScreenSaverBehav : MonoBehaviour
 
     [SerializeField] GameObject ScreenSaverCanvas;
     float LastIdleTime;
+    bool isScreenSaver = true;
 
-    void OnEnable()
-    {
-        //Call onStopScreenSaver event
-        GameEvents.current.StopScreenSaver();
-
-        //Reset Last idle time
-        LastIdleTime = Time.time;
-    }
-
-    void OnDisable()
+    void Start()
     {
         //Call onStartScreenSaver event
         GameEvents.current.StartScreenSaver();
@@ -28,7 +20,9 @@ public class ScreenSaverBehav : MonoBehaviour
 
     void Update()
     {
-        IdleCheck();
+        //If ScreenSaver curently play do nothing
+        if(!isScreenSaver)
+            IdleCheck();
     }
 
     void IdleCheck()
@@ -43,7 +37,23 @@ public class ScreenSaverBehav : MonoBehaviour
         {
             ScreenSaverCanvas.SetActive(true);
             ScreenSaverCanvas.transform.SetAsLastSibling();
-            this.gameObject.SetActive(false);
+
+            isScreenSaver = true;
+
+            //Call onStartScreenSaver event
+            GameEvents.current.StartScreenSaver();
         }
+    }
+
+    public void StopScreenSaver()
+    {
+        //Make IdleCheck() working
+        isScreenSaver = false;
+
+        //Call onStopScreenSaver event
+        GameEvents.current.StopScreenSaver();
+
+        //Reset Last idle time
+        LastIdleTime = Time.time;
     }
 }
