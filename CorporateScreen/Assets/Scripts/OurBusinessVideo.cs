@@ -58,7 +58,11 @@ public class OurBusinessVideo : MonoBehaviour
             if (config.curClip == 0)
             {
                 onVideoButtons[0].SetActive(true);
-            }     
+            } 
+            else if(config.curClip == 3)
+            {
+                onVideoButtons[1].SetActive(true);
+            }
             
             controlButtonCanvas.SetActive(true);
         }
