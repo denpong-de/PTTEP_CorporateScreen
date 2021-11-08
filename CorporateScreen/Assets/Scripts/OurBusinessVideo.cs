@@ -185,5 +185,6 @@ public class OurBusinessVideo : MonoBehaviour
     {
         videoPlayer.Stop();
         videoBehav.ClearOutRenderTexture(renderTexture);
+        controlButtonCanvas.SetActive(true);
     }
 }
