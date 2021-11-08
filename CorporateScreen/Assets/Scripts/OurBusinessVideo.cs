@@ -53,10 +53,10 @@ public class OurBusinessVideo : MonoBehaviour
     {
         config.curClip = index;
 
-        //if (config.curClip == 0 || config.curClip == 3)
-        //{
-        //    controlButtonCanvas.SetActive(true);
-        //}
+        if (config.curClip == 0)
+        {
+            controlButtonCanvas.SetActive(true);
+        }
         if (config.curClip >= 4 && config.curClip < 9)
         {
             //controlButtonCanvas.SetActive(true);
